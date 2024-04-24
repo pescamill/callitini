@@ -1,12 +1,15 @@
 from flask import Flask, request
-import sqlite3
+import os
+import psycopg2
 
 app = Flask(__name__)
 
 @app.route('/submit', methods=['POST'])
 def handle_form():
-    # Connect to SQLite database
-    conn = sqlite3.connect('submissions.db')
+    # Connect to Postgres database
+    DATABASE_URL = os.environ['DATABASE_URL']
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+
     c = conn.cursor()
     
     # Extract fields from form
