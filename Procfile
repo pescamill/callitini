@@ -1,1 +1,1 @@
-web: gunicorn callitini:app
+web: gunicorn app:app
