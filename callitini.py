@@ -26,4 +26,4 @@ def handle_form():
     return "Form submitted successfully!"
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
