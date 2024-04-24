@@ -1,2 +1,3 @@
+heroku logs --tail --app callitini
 web: gunicorn callitini:app
-heroku logs --tail --app your-app-name
+heroku addons:create heroku-postgresql:hobby-dev
