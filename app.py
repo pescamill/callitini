@@ -4,6 +4,8 @@ import psycopg2
 
 app = Flask(__name__)
 
+app.config['DEBUG'] = os.environ.get('FLASK_DEBUG')
+
 @app.route('/submit', methods=['POST'])
 def handle_form():
     # Connect to Postgres database
