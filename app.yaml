@@ -1,6 +1,0 @@
-steps:
-    - name: 'gcr.io/cloud-builders/gcloud'
-      args: ['app', 'deploy']
-
-runtime: python39
-entrypoint: gunicorn -b $PORT app:app
