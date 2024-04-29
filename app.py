@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 import os
 import psycopg2
 
@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 app.config['DEBUG'] = os.environ.get('FLASK_DEBUG')
 
-@app.route('/submit', methods=['POST'])
+@app.route('/submit', methods=['POST', 'GET'])
 def handle_form():
     # Connect to Postgres database
     DATABASE_URL = os.environ['DATABASE_URL']
@@ -25,7 +25,7 @@ def handle_form():
     conn.commit()
     conn.close()
 
-    return "Form submitted successfully!"
+    return render_template('client_form.html')
 
 if __name__ == '__main__':
     app.run()
