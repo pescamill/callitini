@@ -10,7 +10,7 @@ app.config['DEBUG'] = os.environ.get('FLASK_DEBUG')
 
 def get_secret(name):
     client = secretmanager.SecretManagerServiceClient()
-    secret_name = f"projects/your_project_id/secrets/{name}/versions/latest"
+    secret_name = f"projects/376355469246/secrets/{name}"
     response = client.access_secret_version(name=secret_name)
     return response.payload.data.decode("utf-8")
 
