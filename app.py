@@ -19,20 +19,31 @@ def get_db():
     client = MongoClient(mongo_uri)
     return client['mydatabase']
 
-@app.route('/submit', methods=['POST', 'GET'])
+@app.route('/form', methods=['GET'])
+def show_form():
+    # Render the form HTML page
+    return render_template('client_form.html')
+
+@app.route('/submit', methods=['POST'])
 def handle_form():
     # Connect to Postgres database
     
-    db = get_db()
-    collection = db['submissions']
+    db = get_db()  # Or however you're handling your database connection
+    collection = db['client_submissions']
 
-    # Process form data
-    field1 = request.form['field1']
+    # Extract fields from the form
+    field1 = request.form.get('field1')
+    field2 = request.form.get('field2')
+    # Process other fields similarly
 
-    # Insert data into MongoDB
-    collection.insert_one({"field1": field1})
+    # Insert into the database
+    collection.insert_one({
+        "field1": field1,
+        "field2": field2,
+        # Add more fields as needed
+    })
 
-    return render_template('client_form.html')
+    return "Form submitted!"
 
 if __name__ == '__main__':
     app.run()
