@@ -1,29 +1,36 @@
 from flask import Flask, request, render_template
+from pymongo import MongoClient
+from google.cloud import secretmanager
 import os
-import psycopg2
+
 
 app = Flask(__name__)
 
 app.config['DEBUG'] = os.environ.get('FLASK_DEBUG')
 
+def get_secret(name):
+    client = secretmanager.SecretManagerServiceClient()
+    secret_name = f"projects/your_project_id/secrets/{name}/versions/latest"
+    response = client.access_secret_version(name=secret_name)
+    return response.payload.data.decode("utf-8")
+
+def get_db():
+    mongo_uri = get_secret("MONGO_URI")
+    client = MongoClient(mongo_uri)
+    return client['mydatabase']
+
 @app.route('/submit', methods=['POST', 'GET'])
 def handle_form():
     # Connect to Postgres database
-    DATABASE_URL = os.environ['DATABASE_URL']
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    
+    db = get_db()
+    collection = db['submissions']
 
-    c = conn.cursor()
-    
-    # Extract fields from form
+    # Process form data
     field1 = request.form['field1']
-    # Extract other fields and images similarly
-    
-    # Insert data into database
-    # c.execute('''INSERT INTO submissions VALUES (?, ?, ...)''', (field1, ...))
-    
-    # Save changes and close connection
-    conn.commit()
-    conn.close()
+
+    # Insert data into MongoDB
+    collection.insert_one({"field1": field1})
 
     return render_template('client_form.html')
 
